@@ -55,4 +55,3 @@ const playerSlice = createSlice({
 
 export default playerSlice.reducer;
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6IjdkNDEzNzQ4ODMzMjAxODQiLCJpYXQiOjE3MTEyNzY5MDYsIm5iZiI6MTcxMTI3NjkwNiwiaXNzIjoiaHR0cHM6Ly93d3cuYmF0dGxlbWV0cmljcy5jb20iLCJzdWIiOiJ1cm46dXNlcjo1MzMyOTgifQ.9dd-mUBrU7Ep1vQQJmQIu0sv4S5sUirENknsp7OMSq0
