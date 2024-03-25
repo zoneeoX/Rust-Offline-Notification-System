@@ -6,6 +6,13 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      oswald: "Oswald"
+      
+    },
+  },
+  fontFamily: {
+    oswald: "Oswald"
   },
   plugins: [],
 }

@@ -1,51 +1,91 @@
-import { useEffect, useState } from 'react'
-import Modal from './Modal'
+import { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPlayers } from "../features/fetchPlayers";
+import { clearInterval, clearTimeout, setInterval, setTimeout } from 'worker-timers';
 
 const GroupBox = ({ item }) => {
-  const [name, setName] = useState("")
-  const [isChangeName, setIsChangeName] = useState(false)
+  const [name, setName] = useState("");
+  const [isChangeName, setIsChangeName] = useState(false);
+  const inputRef = useRef(null);
+  const dispatch = useDispatch();
+  const { playerList, isLoading, isError } = useSelector(
+    (state) => state.players
+  );
+
+  useEffect(() => {
+    if (isChangeName && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isChangeName]);
 
   function handleName() {
-    setIsChangeName((prevState) => !prevState)
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    setIsChangeName(false)
+    setIsChangeName((prevState) => !prevState);
   }
 
   const handleChange = (event) => {
-    setName(event.target.value)
+    setName(event.target.value);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      setIsChangeName(false);
+    }
+  };
+
+  function fetchAndDispatchPlayers() {
+    dispatch(fetchPlayers());
   }
 
+  const timer = setInterval(fetchAndDispatchPlayers, 60000);
+
   return (
-    <div className='min-w-max min-h-max bg-slate-500 p-4 text-black'>
-
-      <div className='flex flex-row justify-between'>
-      {
-        <h1 onClick={handleName}>
-          {name ? name : "Example Name"}
+    <div className="w-[30vw] bg-[#272A21] p-4 text-white hover:scale-105 transition-all">
+      <div className="flex flex-row justify-between mb-5">
+        <h1 className="font-oswald text-2xl text-white/50">Members</h1>
+        <h1 className="text-2xl font-oswald text-white/50">
+          {item.length} Players
         </h1>
-      }
-
-      <h1>{item.length} players</h1>
-
       </div>
 
-      {isChangeName ? <form className='flex flex-row' onSubmit={handleSubmit}>
-        <input placeholder='Change NAME' onChange={handleChange} />
-        <button type='submit'>Submit</button>
-      </form>
-        : ""}
+      <div className="grid grid-cols-3 grid-rows-2 text-center pt-2 gap-2">
+        {item?.map(({ value, label }, i) => {
+          const found = playerList.find((player) => player.id === value);
+          const textColor = found ? "text-white/50" : "text-red-500";
+          
 
-      {item?.map(({ value, label }, i) => (
-        <div key={i}>
-          <h1> id: {value}</h1>
-          <h1> name: {label}</h1>
-        </div>
-      ))}
+          return (
+            <div key={i} className="font-oswald bg-[#21241C] px-2">
+              <h1
+                className={`text-lg overflow-hidden ${textColor} border-white/50 rounded-2xl`}
+              >
+                {label}
+              </h1>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="w-full flex items-center justify-center">
+        {!isChangeName ? (
+          <h1
+            onClick={handleName}
+            className="font-oswald text-3xl mt-5 text-white/50 cursor-pointer"
+          >
+            {name ? name : "Click me to change name."}
+          </h1>
+        ) : (
+          <input
+            ref={inputRef}
+            placeholder="Type anything here..."
+            onChange={handleChange}
+            onKeyDown={handleKeyPress}
+            className="font-oswald text-3xl text-center mt-5 text-white/50 cursor-pointer bg-[#272A21] outline-none border-none"
+            autoFocus
+          />
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default GroupBox
+export default GroupBox;
