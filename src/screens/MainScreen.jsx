@@ -5,7 +5,12 @@ import GroupBox from "../components/GroupBox";
 import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlayers } from "../features/fetchPlayers";
-import { clearInterval, clearTimeout, setInterval, setTimeout } from 'worker-timers';
+import {
+  clearInterval,
+  clearTimeout,
+  setInterval,
+  setTimeout,
+} from "worker-timers";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
@@ -20,18 +25,18 @@ const MainScreen = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTimeLeft(prevTime => prevTime - 1);
+      setTimeLeft((prevTime) => prevTime - 1);
       if (timeLeft === 0) {
         fetchPlayersAmountOfTimeSomething();
-        setTimeLeft(60); 
+        setTimeLeft(60);
       }
-    }, 1000); 
+    }, 1000);
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     };
-  }, [timeLeft]); 
+  }, [timeLeft]);
 
-  function fetchPlayersAmountOfTimeSomething(){
+  function fetchPlayersAmountOfTimeSomething() {
     dispatch(fetchPlayers());
   }
 
@@ -45,14 +50,19 @@ const MainScreen = () => {
 
       <AddTopBar setIsModal={setIsModal} />
 
-      <GroupOverlay>
-        {arrOfGroup.map((item, i) => (
-          <GroupBox key={i} item={item} />
-        ))}
-      </GroupOverlay>
+      {arrOfGroup.length == 0 ? (
+        ""
+      ) : (
+        <GroupOverlay>
+          {arrOfGroup.map((item, i) => (
+            <GroupBox key={i} item={item} />
+          ))}
+        </GroupOverlay>
+      )}
 
-      <div className="fixed bottom-0 right-0 p-5 text-white/50 font-oswald">
-        Refreshes player data in {timeLeft} seconds
+      <div className="fixed bottom-0 right-0 p-5 text-white/50 font-oswald flex flex-col">
+        Refreshing player data in {timeLeft} seconds
+        <span className="text-sm font-extralight text-right">made by zoneeox.</span>
       </div>
     </div>
   );
