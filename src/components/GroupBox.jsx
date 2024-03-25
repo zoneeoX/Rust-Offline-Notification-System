@@ -1,7 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPlayers } from "../features/fetchPlayers";
-import { clearInterval, clearTimeout, setInterval, setTimeout } from 'worker-timers';
 
 const GroupBox = ({ item }) => {
   const [name, setName] = useState("");
@@ -32,11 +30,7 @@ const GroupBox = ({ item }) => {
     }
   };
 
-  function fetchAndDispatchPlayers() {
-    dispatch(fetchPlayers());
-  }
 
-  const timer = setInterval(fetchAndDispatchPlayers, 60000);
 
   return (
     <div className="w-[30vw] bg-[#272A21] p-4 text-white hover:scale-105 transition-all">
@@ -51,7 +45,7 @@ const GroupBox = ({ item }) => {
         {item?.map(({ value, label }, i) => {
           const found = playerList.find((player) => player.id === value);
           const textColor = found ? "text-white/50" : "text-red-500";
-          
+        
 
           return (
             <div key={i} className="font-oswald bg-[#21241C] px-2">
