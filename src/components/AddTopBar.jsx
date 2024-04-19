@@ -7,8 +7,8 @@ const AddTopBar = ({setIsModal}) => {
     }
 
   return (
-    <div className='p-10 z-10'>
-        <button className='text-white/50 flex flex-col font-oswald px-2 py-1 transition-all text-3xl hover:text-white' onClick={openModal}>
+    <div className='z-10 p-4'>
+        <button className='flex flex-col px-2 py-1 text-3xl transition-all text-white/50 font-oswald hover:text-white' onClick={openModal}>
             Create group
         </button>
     </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AddTopBar from "../components/AddTopBar";
+import debounce from "lodash.debounce";
 import GroupOverlay from "../components/GroupOverlay";
 import GroupBox from "../components/GroupBox";
 import Modal from "../components/Modal";
@@ -11,44 +12,116 @@ import {
   setInterval,
   setTimeout,
 } from "worker-timers";
+import { fetchServer } from "../features/searchServer";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+  const [name, setName] = useState("");
+  const [serverId, setServerId] = useState("");
+  const [isPicked, setIsPicked] = useState(false);
   const { arrOfGroup } = useSelector((state) => state.group);
+  const { serverList, isLoading } = useSelector((state) => state.server);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchPlayers());
-  }, []);
+    dispatch(fetchServer(name));
+  }, [name]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - 1);
-      if (timeLeft === 0) {
-        fetchPlayersAmountOfTimeSomething();
-        setTimeLeft(60);
-      }
-    }, 1000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [timeLeft]);
+    fetchPlayersAmountOfTimeSomething();
+  }, [isPicked]);
+
+  useEffect(() => {
+    if (isPicked == true) {
+      const intervalId = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+        if (timeLeft === 0) {
+          fetchPlayersAmountOfTimeSomething();
+          setTimeLeft(60);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(intervalId);
+      };
+    }
+  }, [timeLeft, isPicked]);
 
   function fetchPlayersAmountOfTimeSomething() {
-    dispatch(fetchPlayers());
+    dispatch(fetchPlayers(serverId));
   }
 
-  return (
-    <div
-      className={`w-screen min-h-screen max-h-full bg-[#151D1C] ${
-        arrOfGroup.length === 0 ? "flex justify-center items-center" : ""
-      }`}
-    >
-      {isModal ? <Modal setIsModal={setIsModal} /> : ""}
+  function changeIsPicked() {
+    setIsPicked(!isPicked);
+  }
 
-      <AddTopBar setIsModal={setIsModal} />
+  const updateSearch = (event) => {
+    setName(event.target.value);
+  };
+
+  function selectServerId(selectedServerId) {
+    setServerId(selectedServerId);
+    changeIsPicked();
+  }
+
+  const debounceOnChange = debounce(updateSearch, 1000);
+
+  return (
+    <div className={`w-screen min-h-screen max-h-full bg-[#151D1C]`}>
+      {isModal ? <Modal setIsModal={setIsModal} /> : ""}
+      {isPicked ? <AddTopBar setIsModal={setIsModal} /> : ""}
+
+      {!isPicked && (
+        <div>
+          <h1 className="p-4 px-4 text-4xl text-white font-oswald">
+            Server List
+          </h1>
+
+          <div className="grid grid-cols-1 gap-2 p-4 text-white font-oswald">
+            <div className="h-10 cursor-pointer text-white/50">
+              <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10">
+                <div className="flex flex-row gap-2">
+                  <span className="text-2xl">Rank</span>
+                  <span className="text-2xl">Name</span>
+                </div>
+                <span className="text-2xl">Players</span>
+              </div>
+            </div>
+
+            {isLoading
+              ? Array(26)
+                  .fill()
+                  .map((_, index) => (
+                    <div
+                      key={index}
+                      className="w-screen h-10 rounded-md bg-[#272A21] animate-pulse"
+                    ></div>
+                  ))
+              : serverList.data?.map((item, key) => (
+                  <div
+                    key={key}
+                    className="font-light cursor-pointer "
+                    onClick={() => {
+                      selectServerId(item.id);
+                    }}
+                  >
+                    <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10 rounded-md">
+                      <div className="flex flex-row gap-2">
+                        <span className="w-10 text-xl">
+                          #{item.attributes.rank}
+                        </span>
+                        <span className="text-xl">{item.attributes.name}</span>
+                      </div>
+                      <span className="text-xl">
+                        {item.attributes.players} / {item.attributes.maxPlayers}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+          </div>
+        </div>
+      )}
 
       {arrOfGroup.length == 0 ? (
         ""
@@ -60,9 +133,11 @@ const MainScreen = () => {
         </GroupOverlay>
       )}
 
-      <div className="fixed bottom-0 right-0 p-5 text-white/50 font-oswald flex flex-col">
+      <div className="fixed bottom-0 right-0 flex flex-col p-5 text-white/50 font-oswald">
         Refreshing player data in {timeLeft} seconds
-        <span className="text-sm font-extralight text-right">made by zoneeox.</span>
+        <span className="text-sm text-right font-extralight">
+          made by zoneeox.
+        </span>
       </div>
     </div>
   );

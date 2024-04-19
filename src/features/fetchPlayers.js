@@ -2,12 +2,21 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios'
 
 const BATTLEMETRICS_API_URL = "https://api.battlemetrics.com";
-const serverId = "9933398";
+
+const initialState = {
+    name: 'players',
+    isLoading: false,
+    isError: false,
+    playerList: [],
+}
+
+
+
 
 
 export const fetchPlayers = createAsyncThunk(
     "players/fetchPlayers",
-    async () => {
+    async (serverId) => {
         try {
             const response = await axios.get(`${BATTLEMETRICS_API_URL}/servers/${serverId}`, {
                 params: {
@@ -22,12 +31,6 @@ export const fetchPlayers = createAsyncThunk(
     }
 );
 
-const initialState = {
-    name: 'players',
-    isLoading: false,
-    isError: false,
-    playerList: []
-}
 
 
 const playerSlice = createSlice({
