@@ -8,7 +8,7 @@ import makeAnimated from "react-select/animated";
 import { addGroup } from "../features/groupSlice";
 import { IoMdClose } from "react-icons/io";
 
-const Modal = ({ setIsModal }) => {
+const Modal = ({ setIsModal, serverId, serverName }) => {
   const [name, setName] = useState("");
   const [selectOptions, setSelectOptions] = useState([]);
   const [selectPlayers, setSelectPlayers] = useState();
@@ -19,14 +19,15 @@ const Modal = ({ setIsModal }) => {
     setIsModal(false);
   }
 
-  const { playerList, isLoading, isError } = useSelector(
+  const { playerList, currentServerPlayer, isLoading, isError } = useSelector(
     (state) => state.players
   );
   const { arrOfGroup } = useSelector((state) => state.group);
+  
 
   useEffect(() => {
-    const options = playerList.map((player) => ({
-      value: player.attributes.id,
+    const options = currentServerPlayer.map((player) => ({
+      value: player.attributes?.id,
       label: player.attributes.name,
     }));
 
@@ -41,7 +42,7 @@ const Modal = ({ setIsModal }) => {
     event.preventDefault();
 
     try {
-      dispatch(addGroup(selectPlayers));
+      dispatch(addGroup({selectPlayers, serverId, serverName}));
     } catch (err) {
       console.log(err);
     } finally {

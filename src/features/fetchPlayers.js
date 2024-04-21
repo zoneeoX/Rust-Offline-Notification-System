@@ -8,6 +8,7 @@ const initialState = {
     isLoading: false,
     isError: false,
     playerList: [],
+    currentServerPlayer: [],
 }
 
 
@@ -43,7 +44,8 @@ const playerSlice = createSlice({
 
        builder.addCase(fetchPlayers.fulfilled, (state, action) => {
         state.isLoading = false
-        state.playerList = action.payload
+        state.playerList.push(...action.payload)
+        state.currentServerPlayer = action.payload
         state.isError = false
        })
 

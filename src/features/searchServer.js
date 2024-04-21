@@ -17,7 +17,7 @@ export const fetchServer = createAsyncThunk("server/fetchServer", async (keyword
       params: {
         "filter[game]": "rust",
         "sort" : "rank",
-        "page[size]" : 20,
+        "page[size]" : 10,
         "filter[status]": "online",
         "filter[search]" : keyword//search
       },

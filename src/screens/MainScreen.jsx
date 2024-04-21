@@ -6,19 +6,13 @@ import GroupBox from "../components/GroupBox";
 import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlayers } from "../features/fetchPlayers";
-import {
-  clearInterval,
-  clearTimeout,
-  setInterval,
-  setTimeout,
-} from "worker-timers";
 import { fetchServer } from "../features/searchServer";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
   const [name, setName] = useState("");
   const [serverId, setServerId] = useState("");
+  const [serverName, setServerName] = useState("")
   const [isPicked, setIsPicked] = useState(false);
   const { arrOfGroup } = useSelector((state) => state.group);
   const { serverList, isLoading } = useSelector((state) => state.server);
@@ -35,18 +29,9 @@ const MainScreen = () => {
 
   useEffect(() => {
     if (isPicked == true) {
-      const intervalId = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-        if (timeLeft === 0) {
-          fetchPlayersAmountOfTimeSomething();
-          setTimeLeft(60);
-        }
-      }, 1000);
-      return () => {
-        clearInterval(intervalId);
-      };
+      fetchPlayersAmountOfTimeSomething();
     }
-  }, [timeLeft, isPicked]);
+  }, [isPicked]);
 
   function fetchPlayersAmountOfTimeSomething() {
     dispatch(fetchPlayers(serverId));
@@ -69,8 +54,12 @@ const MainScreen = () => {
 
   return (
     <div className={`w-screen min-h-screen max-h-full bg-[#151D1C]`}>
-      {isModal ? <Modal setIsModal={setIsModal} /> : ""}
-      {isPicked ? <AddTopBar setIsModal={setIsModal} /> : ""}
+      {isModal ? <Modal setIsModal={setIsModal} serverId={serverId} serverName={serverName} /> : ""}
+      {isPicked ? (
+        <AddTopBar setIsModal={setIsModal} changeIsPicked={changeIsPicked} />
+      ) : (
+        ""
+      )}
 
       {!isPicked && (
         <div>
@@ -79,10 +68,13 @@ const MainScreen = () => {
           </h1>
 
           <div className="grid grid-cols-1 gap-2 p-4 text-white font-oswald">
-          <div className="flex flex-col text-white">
-            <p className="opacity-50 text-md">Search</p>
-            <input className="bg-[#272A21] outline-none w-52 h-7 rounded-lg font-light" onChange={(e) => debounceOnChange(e)} />
-          </div>
+            <div className="flex flex-col text-white">
+              <p className="opacity-50 text-md">Search</p>
+              <input
+                className="bg-[#272A21] outline-none w-52 h-7 rounded-lg font-light"
+                onChange={(e) => debounceOnChange(e)}
+              />
+            </div>
             <div className="h-10 cursor-pointer text-white/50">
               <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10">
                 <div className="flex flex-row gap-2">
@@ -108,6 +100,7 @@ const MainScreen = () => {
                     className="font-light cursor-pointer "
                     onClick={() => {
                       selectServerId(item.id);
+                      setServerName(item.attributes.name)
                     }}
                   >
                     <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10 rounded-md">
@@ -127,18 +120,32 @@ const MainScreen = () => {
         </div>
       )}
 
-      {arrOfGroup.length == 0 ? (
+      {arrOfGroup?.length == 0 ? (
         ""
       ) : (
-        <GroupOverlay>
-          {arrOfGroup.map((item, i) => (
-            <GroupBox key={i} item={item} />
-          ))}
-        </GroupOverlay>
+        <>
+          {!isPicked == true ? (
+            <h1 className="p-4 text-4xl text-white font-oswald">
+              List of groups
+            </h1>
+          ) : (
+            ""
+          )}
+          <GroupOverlay>
+            {arrOfGroup.map((item, i) => (
+              <GroupBox
+                key={i}
+                item={item.selectPlayers}
+                serverId={item.serverId}
+                serverName={item.serverName}
+                idx={i}
+              />
+            ))}
+          </GroupOverlay>
+        </>
       )}
 
       <div className="fixed bottom-0 right-0 flex flex-col p-5 text-white/50 font-oswald">
-        Refreshing player data in {timeLeft} seconds
         <span className="text-sm text-right font-extralight">
           made by zoneeox.
         </span>
