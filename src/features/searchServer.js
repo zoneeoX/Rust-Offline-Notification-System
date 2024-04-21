@@ -16,9 +16,8 @@ export const fetchServer = createAsyncThunk("server/fetchServer", async (keyword
     const response = await axios.get(`${BATTLEMETRICS_API_URL}/servers`, {
       params: {
         "filter[game]": "rust",
-        "filter[maxDistance]": 5000,
         "sort" : "rank",
-        "page[size]" : 25,
+        "page[size]" : 20,
         "filter[status]": "online",
         "filter[search]" : keyword//search
       },

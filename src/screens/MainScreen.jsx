@@ -79,6 +79,10 @@ const MainScreen = () => {
           </h1>
 
           <div className="grid grid-cols-1 gap-2 p-4 text-white font-oswald">
+          <div className="flex flex-col text-white">
+            <p className="opacity-50 text-md">Search</p>
+            <input className="bg-[#272A21] outline-none w-52 h-7 rounded-lg font-light" onChange={(e) => debounceOnChange(e)} />
+          </div>
             <div className="h-10 cursor-pointer text-white/50">
               <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10">
                 <div className="flex flex-row gap-2">
