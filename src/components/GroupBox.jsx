@@ -89,7 +89,7 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
 
   return (
     <div
-      className={`w-[30vw] bg-[#272A21] p-4 text-white transition-all h-full flex flex-col justify-between`}
+      className={`w-full bg-[#272A21] p-4 text-white transition-all h-full flex flex-col justify-between`}
     >
       <div className="flex flex-col">
         <div className="flex flex-row justify-between mb-5">

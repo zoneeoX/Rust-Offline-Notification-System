@@ -47,7 +47,7 @@ const PlayerBox = ({
   }, []);
 
   return (
-    <div className="font-oswald bg-[#21241C] px-2 cursor-pointer min-h-fit max-h-full flex flex-row justify-between items-center">
+    <div className="font-oswald bg-[#21241C] cursor-pointer min-h-fit max-h-full flex flex-row justify-between items-center ">
       <button onClick={handleBack} className="opacity-50 hover:opacity-100">
         <IoChevronBackCircle />
       </button>
@@ -61,9 +61,7 @@ const PlayerBox = ({
           <h1>{playerSwitch == i && item?.attributes?.identifier}</h1>
         ))}
       </h1>
-      <h1 className="font-light opacity-50">
-        {playerSwitch} / {itemLength}
-      </h1>
+
       <button
         onClick={handleFront}
         className="rotate-180 opacity-50 hover:opacity-100"
