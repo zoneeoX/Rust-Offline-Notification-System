@@ -3,12 +3,16 @@ import axios from "axios";
 import { removeGroup } from "../features/groupSlice";
 import { useDispatch } from "react-redux";
 import { IoClose } from "react-icons/io5";
+import PlayerBox from "./PlayerBox";
+import PlayerInfo from "./PlayerInfo";
 
 const GroupBox = ({ item, serverId, serverName, idx }) => {
   const [name, setName] = useState("");
   const [isChangeName, setIsChangeName] = useState(false);
   const [activePlayers, setActivePlayers] = useState([]);
   const [timeLeft, setTimeLeft] = useState(60);
+  const [isHover, setIsHover] = useState(false);
+  
   const inputRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -32,6 +36,11 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
       console.error("Error fetching data: ", error);
     }
   };
+
+  function openPlayerInfo(){
+    setIsHover(!isHover)
+  }
+
 
   useEffect(() => {
     fetchData();
@@ -83,38 +92,40 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
       className={`w-[30vw] bg-[#272A21] p-4 text-white transition-all h-full flex flex-col justify-between`}
     >
       <div className="flex flex-col">
-        <button className="p-2 mb-4 text-white transition-all rounded-full bg-neutral-500/50 hover:bg-neutral-300/50 w-fit" onClick={handleDelete}>
-          <span className="pb-10 text-2xl text-white/50">
-            <IoClose />
-          </span>
-        </button>
         <div className="flex flex-row justify-between mb-5">
-          <div>
-            <div className="flex items-center justify-center w-full">
-              {!isChangeName ? (
-                <h1
-                  onClick={handleName}
-                  className="flex items-end gap-2 text-2xl cursor-pointer font-oswald text-white/50"
-                >
-                  <span>{name ? name : "Members"}</span>
-                  <span className="text-sm opacity-50">
-                    Click me to change name / tag
-                  </span>
-                </h1>
-              ) : (
-                <input
-                  ref={inputRef}
-                  placeholder="Type anything here..."
-                  onChange={handleChange}
-                  onKeyDown={handleKeyPress}
-                  className="font-oswald text-2xl text-center text-white/50 cursor-pointer bg-[#272A21] outline-none border-none"
-                  autoFocus
-                />
-              )}
+          <div className="flex flex-row gap-2">
+            <button
+              className="p-2 mb-4 text-white transition-all rounded-full bg-neutral-500/50 hover:bg-neutral-300/50 w-fit"
+              onClick={handleDelete}
+            >
+              <span className="pb-10 text-2xl text-white/50">
+                <IoClose />
+              </span>
+            </button>
+            <div>
+              <div className="flex items-center justify-center w-full mt-1">
+                {!isChangeName ? (
+                  <h1
+                    onClick={handleName}
+                    className="flex items-end gap-2 text-2xl cursor-pointer font-oswald text-white/50"
+                  >
+                    <span>{name ? name : "Members"}</span>
+                  </h1>
+                ) : (
+                  <input
+                    ref={inputRef}
+                    placeholder="Type anything here..."
+                    onChange={handleChange}
+                    onKeyDown={handleKeyPress}
+                    className="font-oswald text-2xl text-start text-white/50 cursor-pointer bg-[#272A21] outline-none border-none"
+                    autoFocus
+                  />
+                )}
+              </div>
             </div>
           </div>
 
-          <h1 className="text-2xl font-oswald text-white/50">
+          <h1 className="mt-1 text-2xl font-oswald text-white/50">
             {activePlayers.length} / {item?.length} Players
           </h1>
         </div>
@@ -123,15 +134,9 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
           {item?.map(({ value, label }, i) => {
             const isPlayerActive = activePlayers.includes(value);
             return (
-              <div key={i} className="font-oswald bg-[#21241C] px-2">
-                <h1
-                  className={`text-lg overflow-hidden border-white/50 rounded-2xl font-light ${
-                    isPlayerActive ? "text-white/50" : "text-red-500"
-                  }`}
-                >
-                  {label}
-                </h1>
-              </div>
+              <>
+              <PlayerBox isPlayerActive={isPlayerActive} value={value} label={label} openPlayerInfo={openPlayerInfo} itemLength={item?.length} />
+              </>
             );
           })}
         </div>
