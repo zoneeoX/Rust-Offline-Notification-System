@@ -48,7 +48,7 @@ const PlayerBox = ({
 
   return (
     <div className="font-oswald bg-[#21241C] cursor-pointer min-h-fit max-h-full flex flex-row justify-between items-center ">
-      <button onClick={handleBack} className="opacity-50 hover:opacity-100">
+      <button onClick={handleBack} className="opacity-0 hover:opacity-100">
         <IoChevronBackCircle />
       </button>
       <h1
@@ -64,7 +64,7 @@ const PlayerBox = ({
 
       <button
         onClick={handleFront}
-        className="rotate-180 opacity-50 hover:opacity-100"
+        className="rotate-180 opacity-0 hover:opacity-100"
       >
         <IoChevronBackCircle />
       </button>
