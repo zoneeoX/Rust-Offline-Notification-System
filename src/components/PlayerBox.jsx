@@ -47,27 +47,19 @@ const PlayerBox = ({
   }, []);
 
   return (
-    <div className="font-oswald bg-[#21241C] cursor-pointer min-h-fit max-h-full flex flex-row justify-between items-center ">
-      <button onClick={handleBack} className="opacity-0 hover:opacity-100">
-        <IoChevronBackCircle />
-      </button>
+    <div className="font-oswald bg-[#21241C] cursor-pointer min-h-fit max-h-full">
       <h1
-        className={`text-lg overflow-hidden border-white/50 rounded-2xl font-light flex flex-row items-center ${
+        className={`text-lg overflow-hidden border-white/50 rounded-2xl font-light ${
           isPlayerActive ? "text-white/50" : "text-red-500"
         }`}
         onClick={() => setIsHover(!isHover)}
       >
-        {player?.map((item, i) => (
+        {/* {player?.map((item, i) => (
           <h1>{playerSwitch == i && item?.attributes?.identifier}</h1>
-        ))}
+        ))} */}
+        {label}
       </h1>
 
-      <button
-        onClick={handleFront}
-        className="rotate-180 opacity-0 hover:opacity-100"
-      >
-        <IoChevronBackCircle />
-      </button>
       {/* {isHover && player && (
         <>
           {player.map((item, i) => (
