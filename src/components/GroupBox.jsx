@@ -82,7 +82,7 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
     }
   };
 
-  function handleDelete() {
+  function handleRemove() {
     dispatch(removeGroup(idx));
   }
 
@@ -93,14 +93,14 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
       <div className="flex flex-col">
         <div className="flex flex-row justify-between mb-5">
           <div className="flex flex-row gap-2">
-              <button
-                className="absolute p-2 mb-4 text-white transition-all rounded-full opacity-0 -right-5 -top-5 bg-neutral-500/50 hover:bg-neutral-300/50 w-fit group-hover:opacity-100"
-                onClick={handleDelete}
-              >
-                <span className="pb-10 text-2xl text-white/50">
-                  <IoClose />
-                </span>
-              </button>
+            <button
+              className="absolute p-2 mb-4 text-white transition-all rounded-full opacity-0 -right-5 -top-5 bg-neutral-500/50 hover:bg-neutral-300/50 w-fit group-hover:opacity-100"
+              onClick={() => handleRemove()}
+            >
+              <span className="pb-10 text-2xl text-white/50">
+                <IoClose />
+              </span>
+            </button>
             <div>
               <div className="flex items-center justify-center w-full mt-1">
                 {!isChangeName ? (
@@ -141,15 +141,14 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
           {item?.map(({ value, label }, i) => {
             const isPlayerActive = activePlayers.includes(value);
             return (
-              <>
-                <PlayerBox
-                  isPlayerActive={isPlayerActive}
-                  value={value}
-                  label={label}
-                  openPlayerInfo={openPlayerInfo}
-                  itemLength={item?.length}
-                />
-              </>
+              <PlayerBox
+                key={value} // added key prop
+                isPlayerActive={isPlayerActive}
+                value={value}
+                label={label}
+                openPlayerInfo={openPlayerInfo}
+                itemLength={item?.length}
+              />
             );
           })}
         </div>

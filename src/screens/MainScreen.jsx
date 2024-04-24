@@ -50,6 +50,7 @@ const MainScreen = () => {
     changeIsPicked();
   }
 
+
   const debounceOnChange = debounce(updateSearch, 1000);
 
   return (

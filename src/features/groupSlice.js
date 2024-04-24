@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   name: "group",
-  arrOfGroup: [],
+  arrOfGroup: localStorage.getItem('listOfGroups') ? JSON.parse(localStorage.getItem('listOfGroups')) : []
 };
 
 export const groupSlice = createSlice({
@@ -11,10 +11,12 @@ export const groupSlice = createSlice({
   reducers: {
     addGroup: (state, action) => {
       state.arrOfGroup.push(action.payload);
+      localStorage.setItem("listOfGroups", JSON.stringify(state.arrOfGroup));
     },
     removeGroup: (state, action) => {
       const idx = action.payload;
       state.arrOfGroup.splice(idx, 1);
+      localStorage.setItem("listOfGroups", JSON.stringify(state.arrOfGroup))
     },
   },
 });
