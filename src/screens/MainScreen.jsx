@@ -7,6 +7,7 @@ import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlayers } from "../features/fetchPlayers";
 import { fetchServer } from "../features/searchServer";
+import AddPlayerModal from "../components/AddPlayerModal";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
@@ -61,6 +62,7 @@ const MainScreen = () => {
       ) : (
         ""
       )}
+
 
       {!isPicked && (
         <div>

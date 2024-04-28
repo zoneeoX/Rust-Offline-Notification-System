@@ -12,9 +12,6 @@ const initialState = {
 }
 
 
-
-
-
 export const fetchPlayers = createAsyncThunk(
     "players/fetchPlayers",
     async (serverId) => {

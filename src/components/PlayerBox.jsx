@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { IoChevronBackCircle } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { IoCloseCircleOutline } from "react-icons/io5";
+import { removePlayer } from "../features/groupSlice";
 
 const PlayerBox = ({
   isPlayerActive,
@@ -8,10 +11,14 @@ const PlayerBox = ({
   label,
   openPlayerInfo,
   itemLength,
+  playerIDX,
+  groupIDX,
 }) => {
   const [player, setPlayer] = useState();
   const [isHover, setIsHover] = useState(false);
   const [playerSwitch, setPlayerSwitch] = useState(0);
+
+  const dispatch = useDispatch();
 
   const fetchUser = async () => {
     try {
@@ -30,6 +37,10 @@ const PlayerBox = ({
     }
   };
 
+  function handleRemovePlayer() {
+    dispatch(removePlayer({ playerIDX, groupIDX }));
+  }
+
   function handleBack() {
     if (playerSwitch != 0) {
       setPlayerSwitch((prevState) => prevState - 1);
@@ -47,7 +58,13 @@ const PlayerBox = ({
   }, []);
 
   return (
-    <div className="font-oswald bg-[#21241C] cursor-pointer min-h-fit max-h-full">
+    <div className="font-oswald bg-[#21241C] cursor-pointer text-nowrap relative z-20 group">
+      <span
+        className="absolute text-xl text-white transition-all opacity-0 hover:text-red-600 -right-2 -top-2 group-hover:opacity-100"
+        onClick={() => handleRemovePlayer()}
+      >
+        <IoCloseCircleOutline />
+      </span>
       <h1
         className={`text-lg overflow-hidden border-white/50 rounded-2xl font-light ${
           isPlayerActive ? "text-white/50" : "text-red-500"
