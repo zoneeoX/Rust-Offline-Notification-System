@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { removeGroup } from "../features/groupSlice";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { IoClose } from "react-icons/io5";
 import PlayerBox from "./PlayerBox";
 import { BsFillPeopleFill } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
 import PlayerModal from "./PlayerModal";
-import { FaMap } from "react-icons/fa";
+import { FaMap, FaDownload } from "react-icons/fa";
 import { FaCopy } from "react-icons/fa";
 
 const GroupBox = ({
@@ -26,6 +26,7 @@ const GroupBox = ({
   const [isHover, setIsHover] = useState(false);
   const [isOpenPlayerModal, setIsOpenPlayerModal] = useState(false);
   const [allPlayer, setAllPlayer] = useState("");
+  const { arrOfGroup } = useSelector((state) => state.group);
 
   const inputRef = useRef(null);
   const dispatch = useDispatch();
@@ -120,6 +121,25 @@ const GroupBox = ({
       });
   }
 
+  const exportGroupData = (idx) => {
+    const groupData = arrOfGroup.find((group, index) => index === idx);
+
+    if (groupData) {
+      const json = JSON.stringify(groupData);
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `group_rustoffnotifier_data_${idx}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else {
+      console.error("Group data is not found, please report if there is any bug!");
+    }
+  };
+
   return (
     <>
       {isOpenPlayerModal && (
@@ -210,16 +230,23 @@ const GroupBox = ({
 
         <div className="flex flex-row items-center justify-end">
           <a href={rustDetails?.url} target="_blank" rel="noopener noreferrer">
-            <span className="flex items-center justify-end p-2 opacity-50 hover:opacity-100">
+            <span className="flex items-center justify-end p-2 opacity-50 cursor-pointer hover:opacity-100">
               <FaMap />
             </span>
           </a>
 
           <a onClick={() => copyToClipboard(address)}>
-            <span className="flex items-center justify-end p-2 opacity-50 hover:opacity-100">
+            <span className="flex items-center justify-end p-2 opacity-50 cursor-pointer hover:opacity-100">
               <FaCopy />
             </span>
           </a>
+
+          <span
+            className="flex items-center justify-end p-2 opacity-50 cursor-pointer hover:opacity-100"
+            onClick={() => exportGroupData(idx)}
+          >
+            <FaDownload />
+          </span>
         </div>
 
         <div className="flex flex-col items-center">

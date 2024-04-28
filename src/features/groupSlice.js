@@ -32,9 +32,14 @@ export const groupSlice = createSlice({
       state.arrOfGroup[groupIDX].selectPlayers.splice(playerIDX, 1);
       localStorage.setItem("listOfGroups", JSON.stringify(state.arrOfGroup));
     },
+    importData: (state, action) => {
+      const importedData = action.payload;
+      state.arrOfGroup.push(importedData);
+      localStorage.setItem("listOfGroups", JSON.stringify(state.arrOfGroup));
+    },
   },
 });
 
-export const { addGroup, removeGroup, addPlayer, removePlayer } =
+export const { addGroup, removeGroup, addPlayer, removePlayer, importData } =
   groupSlice.actions;
 export default groupSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import AddTopBar from "../components/AddTopBar";
 import debounce from "lodash.debounce";
 import GroupOverlay from "../components/GroupOverlay";
@@ -7,7 +7,8 @@ import Modal from "../components/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPlayers } from "../features/fetchPlayers";
 import { fetchServer } from "../features/searchServer";
-import AddPlayerModal from "../components/AddPlayerModal";
+import { FaFileImport } from "react-icons/fa";
+import { importData } from "../features/groupSlice";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
@@ -54,6 +55,7 @@ const MainScreen = () => {
     setServerId(selectedServerId);
     changeIsPicked();
   }
+
 
   const debounceOnChange = debounce(updateSearch, 1000);
 
@@ -138,7 +140,7 @@ const MainScreen = () => {
           </div>
         </div>
       )}
-
+     
       {arrOfGroup?.length == 0 ? (
         ""
       ) : (
@@ -167,7 +169,7 @@ const MainScreen = () => {
         </>
       )}
 
-      <div className="fixed bottom-0 right-0 flex flex-col p-5 text-white/50 font-oswald">
+      <div className="fixed bottom-0 right-0 z-50 flex flex-col p-5 text-white/50 font-oswald">
         <span className="text-sm text-right font-extralight">
           made by zoneeox.
         </span>

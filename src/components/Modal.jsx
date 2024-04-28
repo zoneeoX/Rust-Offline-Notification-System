@@ -67,7 +67,7 @@ const Modal = ({
   };
 
   return (
-    <div className="fixed top-0 z-20 flex items-center justify-center w-screen h-screen overflow-hidden bg-black/30 font-oswald">
+    <div className="fixed top-0 z-50 flex items-center justify-center w-screen h-screen overflow-hidden bg-black/30 font-oswald">
       <div className="w-[30vw] h-fit bg-[#272A21] p-6 relative rounded-2xl">
         <button onClick={closeModal}>
           <span className="text-4xl text-white ">
