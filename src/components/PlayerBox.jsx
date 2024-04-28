@@ -60,7 +60,7 @@ const PlayerBox = ({
   return (
     <div className="font-oswald bg-[#21241C] cursor-pointer text-nowrap relative z-20 group">
       <span
-        className="absolute text-xl text-white transition-all opacity-0 hover:text-red-600 -right-2 -top-2 group-hover:opacity-100"
+        className="absolute text-xl transition-all opacity-0 text-neutral-500 hover:text-red-600 -right-2 -top-2 group-hover:opacity-100"
         onClick={() => handleRemovePlayer()}
       >
         <IoCloseCircleOutline />

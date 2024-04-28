@@ -8,7 +8,14 @@ import makeAnimated from "react-select/animated";
 import { addGroup } from "../features/groupSlice";
 import { IoMdClose } from "react-icons/io";
 
-const Modal = ({ setIsModal, serverId, serverName }) => {
+const Modal = ({
+  setIsModal,
+  serverId,
+  serverName,
+  address,
+  headerImage,
+  rustDetails,
+}) => {
   const [name, setName] = useState("");
   const [selectOptions, setSelectOptions] = useState([]);
   const [selectPlayers, setSelectPlayers] = useState();
@@ -23,7 +30,6 @@ const Modal = ({ setIsModal, serverId, serverName }) => {
     (state) => state.players
   );
   const { arrOfGroup } = useSelector((state) => state.group);
-  
 
   useEffect(() => {
     const options = currentServerPlayer.map((player) => ({
@@ -42,7 +48,16 @@ const Modal = ({ setIsModal, serverId, serverName }) => {
     event.preventDefault();
 
     try {
-      dispatch(addGroup({selectPlayers, serverId, serverName}));
+      dispatch(
+        addGroup({
+          selectPlayers,
+          serverId,
+          serverName,
+          address,
+          headerImage,
+          rustDetails,
+        })
+      );
     } catch (err) {
       console.log(err);
     } finally {

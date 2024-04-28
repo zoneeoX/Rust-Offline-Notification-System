@@ -7,8 +7,18 @@ import PlayerBox from "./PlayerBox";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa6";
 import PlayerModal from "./PlayerModal";
+import { FaMap } from "react-icons/fa";
+import { FaCopy } from "react-icons/fa";
 
-const GroupBox = ({ item, serverId, serverName, idx }) => {
+const GroupBox = ({
+  item,
+  serverId,
+  serverName,
+  idx,
+  address,
+  headerImage,
+  rustDetails,
+}) => {
   const [name, setName] = useState("");
   const [isChangeName, setIsChangeName] = useState(false);
   const [activePlayers, setActivePlayers] = useState([]);
@@ -99,6 +109,17 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
     setIsOpenPlayerModal(false);
   }
 
+  function copyToClipboard(text) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log("copied:", text);
+      })
+      .catch((error) => {
+        console.error("Faileed", error);
+      });
+  }
+
   return (
     <>
       {isOpenPlayerModal && (
@@ -110,7 +131,7 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
       )}
 
       <div
-        className={`w-full bg-[#272A21] hover:bg-[#2c3026] p-4 text-white transition-all h-full flex flex-col justify-between group relative`}
+        className={`w-full bg-[#272A21] hover:bg-[#2c3026] text-white transition-all h-full flex flex-col justify-between group relative p-4`}
       >
         <div className="flex flex-col">
           <div className="flex flex-row justify-between mb-5">
@@ -187,10 +208,24 @@ const GroupBox = ({ item, serverId, serverName, idx }) => {
           </div>
         </div>
 
+        <div className="flex flex-row items-center justify-end">
+          <a href={rustDetails?.url} target="_blank" rel="noopener noreferrer">
+            <span className="flex items-center justify-end p-2 opacity-50 hover:opacity-100">
+              <FaMap />
+            </span>
+          </a>
+
+          <a onClick={() => copyToClipboard(address)}>
+            <span className="flex items-center justify-end p-2 opacity-50 hover:opacity-100">
+              <FaCopy />
+            </span>
+          </a>
+        </div>
+
         <div className="flex flex-col items-center">
-          <h1 className="mt-10 text-center opacity-50 font-oswald">
-            {serverName}
-          </h1>
+          <div className="flex flex-row">
+            <h1 className="text-center opacity-50 font-oswald">{serverName}</h1>
+          </div>
           <h1 className="font-light opacity-50">
             {timeLeft} seconds left until data refreshes
           </h1>

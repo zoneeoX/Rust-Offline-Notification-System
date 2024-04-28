@@ -13,7 +13,11 @@ const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
   const [name, setName] = useState("");
   const [serverId, setServerId] = useState("");
-  const [serverName, setServerName] = useState("")
+  const [serverName, setServerName] = useState("");
+  const [address, setAddress] = useState("");
+  const [headerImage, setHeaderImage] = useState("");
+  const [rustDetails, setRustDetails] = useState("");
+
   const [isPicked, setIsPicked] = useState(false);
   const { arrOfGroup } = useSelector((state) => state.group);
   const { serverList, isLoading } = useSelector((state) => state.server);
@@ -51,18 +55,27 @@ const MainScreen = () => {
     changeIsPicked();
   }
 
-
   const debounceOnChange = debounce(updateSearch, 1000);
 
   return (
     <div className={`w-screen min-h-screen max-h-full bg-[#151D1C]`}>
-      {isModal ? <Modal setIsModal={setIsModal} serverId={serverId} serverName={serverName} /> : ""}
+      {isModal ? (
+        <Modal
+          setIsModal={setIsModal}
+          serverId={serverId}
+          serverName={serverName}
+          address={address}
+          headerImage={headerImage}
+          rustDetails={rustDetails}
+        />
+      ) : (
+        ""
+      )}
       {isPicked ? (
         <AddTopBar setIsModal={setIsModal} changeIsPicked={changeIsPicked} />
       ) : (
         ""
       )}
-
 
       {!isPicked && (
         <div>
@@ -103,7 +116,10 @@ const MainScreen = () => {
                     className="font-light cursor-pointer "
                     onClick={() => {
                       selectServerId(item.id);
-                      setServerName(item.attributes.name)
+                      setServerName(item.attributes.name);
+                      setAddress(item.attributes.address);
+                      setHeaderImage(item.attributes.details.rust_headerimage);
+                      setRustDetails(item.attributes.details.rust_maps);
                     }}
                   >
                     <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10 rounded-md">
@@ -142,6 +158,9 @@ const MainScreen = () => {
                 serverId={item.serverId}
                 serverName={item.serverName}
                 idx={i}
+                address={item.address}
+                headerImage={item.headerImage}
+                rustDetails={item.rustDetails}
               />
             ))}
           </GroupOverlay>
