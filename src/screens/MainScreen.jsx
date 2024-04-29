@@ -9,6 +9,9 @@ import { fetchPlayers } from "../features/fetchPlayers";
 import { fetchServer } from "../features/searchServer";
 import { FaFileImport } from "react-icons/fa";
 import { importData } from "../features/groupSlice";
+import { BsFillPeopleFill } from "react-icons/bs";
+import { FaMap } from "react-icons/fa";
+import { RiLoopLeftFill } from "react-icons/ri";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
@@ -56,6 +59,26 @@ const MainScreen = () => {
     changeIsPicked();
   }
 
+  function formatTimeAgo(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} day${days > 1 ? "s" : ""} ago`;
+    } else if (hours > 0) {
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    } else if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    } else {
+      return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
+    }
+  }
 
   const debounceOnChange = debounce(updateSearch, 1000);
 
@@ -74,7 +97,11 @@ const MainScreen = () => {
         ""
       )}
       {isPicked ? (
-        <AddTopBar setIsModal={setIsModal} changeIsPicked={changeIsPicked} />
+        <AddTopBar
+          setIsModal={setIsModal}
+          changeIsPicked={changeIsPicked}
+          serverName={serverName}
+        />
       ) : (
         ""
       )}
@@ -85,24 +112,14 @@ const MainScreen = () => {
             Server List
           </h1>
 
-          <div className="grid grid-cols-1 gap-2 p-4 text-white font-oswald">
-            <div className="flex flex-col text-white">
-              <p className="opacity-50 text-md">Search</p>
-              <input
-                className="bg-[#272A21] outline-none w-52 h-7 rounded-lg font-light"
-                onChange={(e) => debounceOnChange(e)}
-              />
-            </div>
-            <div className="h-10 cursor-pointer text-white/50">
-              <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10">
-                <div className="flex flex-row gap-2">
-                  <span className="text-2xl">Rank</span>
-                  <span className="text-2xl">Name</span>
-                </div>
-                <span className="text-2xl">Players</span>
-              </div>
-            </div>
-
+          <div className="flex flex-col px-4 text-white">
+            <p className="opacity-50 text-md">Search</p>
+            <input
+              className="bg-[#272A21] outline-none w-52 h-7 rounded-lg font-light"
+              onChange={(e) => debounceOnChange(e)}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-2 p-4 text-white md:grid-cols-2 lg:grid-cols-4 font-oswald">
             {isLoading
               ? Array(26)
                   .fill()
@@ -124,23 +141,50 @@ const MainScreen = () => {
                       setRustDetails(item.attributes.details.rust_maps);
                     }}
                   >
-                    <div className="w-full px-2 bg-[#272A21] hover:bg-[#3c4133] flex flex-row justify-between items-center h-10 rounded-md">
-                      <div className="flex flex-row gap-2">
-                        <span className="w-10 text-xl">
-                          #{item.attributes.rank}
-                        </span>
-                        <span className="text-xl">{item.attributes.name}</span>
+                    <div className="w-full h-full bg-[#272A21] hover:bg-[#3c4133] flex flex-col justify-between items-top rounded-md relative overflow-hidden group">
+                      <div className="relative flex items-start justify-center h-32 overflow-hidden">
+                        <img
+                          src={item.attributes.details.rust_headerimage}
+                          className="opacity-40 group-hover:opacity-75"
+                        />
                       </div>
-                      <span className="text-xl">
-                        {item.attributes.players} / {item.attributes.maxPlayers}
-                      </span>
+                      <div className="p-2 opacity-50 group-hover:opacity-100">
+                        <h1 className="p-2 text-xl font-semibold text-center truncate text-nowrap">
+                          {item.attributes.name}
+                        </h1>
+                        <p className="flex flex-row items-center gap-2">
+                          <span className="text-xl">
+                            <BsFillPeopleFill />
+                          </span>
+                          <span className="w-16">Players</span>
+                          {item.attributes.players} /{" "}
+                          {item.attributes.maxPlayers}
+                        </p>
+                        <p className="flex flex-row items-center gap-2">
+                          <span className="text-xl">
+                            <FaMap />
+                          </span>
+                          <span className="w-16">Last wipe</span>
+                          {formatTimeAgo(
+                            item.attributes.details.rust_last_wipe
+                          )}
+                        </p>
+                        <p className="flex flex-row items-center gap-2">
+                          <span className="text-xl">
+                            <RiLoopLeftFill />
+                          </span>
+
+                          <span className="w-16">Map</span>
+                          {item.attributes.details.map}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 ))}
           </div>
         </div>
       )}
-     
+
       {arrOfGroup?.length == 0 ? (
         ""
       ) : (
@@ -152,7 +196,7 @@ const MainScreen = () => {
           ) : (
             ""
           )}
-          <GroupOverlay>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 p-4">
             {arrOfGroup.map((item, i) => (
               <GroupBox
                 key={i}
@@ -165,7 +209,7 @@ const MainScreen = () => {
                 rustDetails={item.rustDetails}
               />
             ))}
-          </GroupOverlay>
+          </div>
         </>
       )}
 

@@ -5,7 +5,7 @@ import { importData } from "../features/groupSlice";
 import { useDispatch } from "react-redux";
 import { FaFileImport } from "react-icons/fa";
 
-const AddTopBar = ({ setIsModal, changeIsPicked }) => {
+const AddTopBar = ({ setIsModal, changeIsPicked, serverName }) => {
   const dispatch = useDispatch();
 
   function openModal() {
@@ -35,17 +35,20 @@ const AddTopBar = ({ setIsModal, changeIsPicked }) => {
   };
 
   return (
-    <div className="z-10 p-4 text-white font-oswald">
-      <button
-        className="flex flex-col px-2 py-1 text-3xl transition-all text-white/50 hover:text-white"
-        onClick={closePage}
-      >
-        <span className="p-2 text-black transition-all rounded-full bg-neutral-200/50 hover:bg-neutral-100">
-          <IoChevronBackSharp />
-        </span>
-      </button>
+    <div className="z-10 text-white font-oswald">
+      <div className="flex flex-row items-center gap-2 p-4 bg-[#272A21]">
+        <button
+          className="flex flex-col px-2 py-1 text-3xl transition-all text-white/50 hover:text-white"
+          onClick={closePage}
+        >
+          <span className="p-2 text-black transition-all rounded-full bg-neutral-200/50 hover:bg-neutral-100">
+            <IoChevronBackSharp />
+          </span>
+        </button>
+        <h1 className="text-4xl">{serverName}</h1>
+      </div>
 
-      <div className="flex flex-row gap-2 mt-10">
+      <div className="flex flex-row gap-2 p-4 mt-5">
         <button
           className="flex flex-row items-center justify-center gap-2 p-2 text-white rounded-full cursor-pointer bg-neutral-700 hover:bg-neutral-600 w-36"
           onClick={openModal}
