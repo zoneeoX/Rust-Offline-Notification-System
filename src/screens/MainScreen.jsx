@@ -32,9 +32,9 @@ const MainScreen = () => {
     dispatch(fetchServer(name));
   }, [name]);
 
-  useEffect(() => {
-    fetchPlayersAmountOfTimeSomething();
-  }, [isPicked]);
+  // useEffect(() => {
+  //   fetchPlayersAmountOfTimeSomething();
+  // }, [isPicked]);
 
   useEffect(() => {
     if (isPicked == true) {
@@ -126,7 +126,7 @@ const MainScreen = () => {
                   .map((_, index) => (
                     <div
                       key={index}
-                      className="w-screen h-10 rounded-md bg-[#272A21] animate-pulse"
+                      className="w-[24vw] h-[20vh] rounded-md bg-[#272A21] animate-pulse"
                     ></div>
                   ))
               : serverList.data?.map((item, key) => (
