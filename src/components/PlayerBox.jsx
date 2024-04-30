@@ -13,6 +13,7 @@ const PlayerBox = ({
   itemLength,
   playerIDX,
   groupIDX,
+  isPlayerLoaded
 }) => {
   const [player, setPlayer] = useState();
   const [isHover, setIsHover] = useState(false);
@@ -74,7 +75,9 @@ const PlayerBox = ({
         {/* {player?.map((item, i) => (
           <h1>{playerSwitch == i && item?.attributes?.identifier}</h1>
         ))} */}
-        {label}
+        {isPlayerLoaded ? (
+          label
+        ) : "Player data is still on load."}
       </h1>
 
       {/* {isHover && player && (

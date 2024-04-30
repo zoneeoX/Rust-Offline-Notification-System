@@ -145,11 +145,11 @@ const MainScreen = () => {
                   >
                     <div className="w-full h-full bg-[#272A21] hover:bg-[#3c4133] flex flex-col justify-between items-top rounded-md relative overflow-hidden group">
                       <div className="relative flex items-start justify-center h-32 overflow-hidden">
-
-                        
                         <img
                           src={item.attributes.details.rust_headerimage}
-                          className={`opacity-40 group-hover:opacity-75 ${loadedImage ? "visible" : "hidden"}`}
+                          className={`opacity-40 group-hover:opacity-75 ${
+                            loadedImage ? "visible" : "hidden"
+                          }`}
                           onLoad={() => setLoadedImage(true)}
                         />
                       </div>

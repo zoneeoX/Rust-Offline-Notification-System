@@ -22,14 +22,46 @@ const GroupBox = ({
   const [name, setName] = useState("");
   const [isChangeName, setIsChangeName] = useState(false);
   const [activePlayers, setActivePlayers] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(1);
   const [isHover, setIsHover] = useState(false);
   const [isOpenPlayerModal, setIsOpenPlayerModal] = useState(false);
   const [allPlayer, setAllPlayer] = useState("");
   const { arrOfGroup } = useSelector((state) => state.group);
+  const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
 
   const inputRef = useRef(null);
+  const activePlayersRef = useRef([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const allPlayersOffline = activePlayers.length === 0;
+
+    const wasAnyPlayerOnline = activePlayersRef.current.length > 0;
+
+    if (allPlayersOffline && wasAnyPlayerOnline && isPlayerLoaded) {
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification(serverName, {
+          body: item?.map(({ label }) => label).join(", ") + " Are offline!",
+          icon: "/icon.jpg",
+        });
+      } else if (
+        "Notification" in window &&
+        Notification.permission !== "denied"
+      ) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            new Notification(serverName, {
+              body:
+                item?.map(({ label }) => label).join(", ") + " Are offline!",
+              icon: "/icon.jpg",
+            });
+          }
+        });
+      }
+    }
+
+    activePlayersRef.current = activePlayers;
+  }, [activePlayers, isPlayerLoaded, item, serverName]);
 
   const fetchData = async () => {
     try {
@@ -50,6 +82,8 @@ const GroupBox = ({
       );
     } catch (error) {
       console.error("Error fetching data: ", error);
+    } finally {
+      setIsPlayerLoaded(true);
     }
   };
 
@@ -58,8 +92,6 @@ const GroupBox = ({
   }
 
   useEffect(() => {
-    fetchData();
-
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
@@ -67,9 +99,9 @@ const GroupBox = ({
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    fetchData();
-  }, [item, serverId]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [item, serverId]);
 
   useEffect(() => {
     if (timeLeft === 0) {
@@ -136,16 +168,15 @@ const GroupBox = ({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } else {
-      console.error("Group data is not found, please report if there is any bug!");
+      console.error(
+        "Group data is not found, please report if there is any bug!"
+      );
     }
   };
 
-  function handleOutOfFocus(){
+  function handleOutOfFocus() {
     setIsChangeName(false);
   }
-
-
-  
 
   return (
     <>
@@ -221,6 +252,7 @@ const GroupBox = ({
                   itemLength={item?.length}
                   playerIDX={i}
                   groupIDX={idx}
+                  isPlayerLoaded={isPlayerLoaded}
                 />
               );
             })}
