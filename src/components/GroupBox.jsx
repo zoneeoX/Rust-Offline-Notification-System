@@ -140,6 +140,13 @@ const GroupBox = ({
     }
   };
 
+  function handleOutOfFocus(){
+    setIsChangeName(false);
+  }
+
+
+  
+
   return (
     <>
       {isOpenPlayerModal && (
@@ -182,6 +189,7 @@ const GroupBox = ({
                       placeholder="Type anything here..."
                       onChange={handleChange}
                       onKeyDown={handleKeyPress}
+                      onBlur={handleOutOfFocus}
                       className="font-oswald text-2xl text-start text-white/50 cursor-pointer bg-[#272A21] outline-none border-none"
                       autoFocus
                     />

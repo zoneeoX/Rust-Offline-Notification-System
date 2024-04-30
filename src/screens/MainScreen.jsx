@@ -12,6 +12,7 @@ import { importData } from "../features/groupSlice";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { FaMap } from "react-icons/fa";
 import { RiLoopLeftFill } from "react-icons/ri";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
@@ -21,6 +22,7 @@ const MainScreen = () => {
   const [address, setAddress] = useState("");
   const [headerImage, setHeaderImage] = useState("");
   const [rustDetails, setRustDetails] = useState("");
+  const [loadedImage, setLoadedImage] = useState(false);
 
   const [isPicked, setIsPicked] = useState(false);
   const { arrOfGroup } = useSelector((state) => state.group);
@@ -121,7 +123,7 @@ const MainScreen = () => {
           </div>
           <div className="grid grid-cols-1 gap-2 p-4 text-white md:grid-cols-2 lg:grid-cols-4 font-oswald">
             {isLoading
-              ? Array(26)
+              ? Array(8)
                   .fill()
                   .map((_, index) => (
                     <div
@@ -143,9 +145,12 @@ const MainScreen = () => {
                   >
                     <div className="w-full h-full bg-[#272A21] hover:bg-[#3c4133] flex flex-col justify-between items-top rounded-md relative overflow-hidden group">
                       <div className="relative flex items-start justify-center h-32 overflow-hidden">
+
+                        
                         <img
                           src={item.attributes.details.rust_headerimage}
-                          className="opacity-40 group-hover:opacity-75"
+                          className={`opacity-40 group-hover:opacity-75 ${loadedImage ? "visible" : "hidden"}`}
+                          onLoad={() => setLoadedImage(true)}
                         />
                       </div>
                       <div className="p-2 opacity-50 group-hover:opacity-100">
