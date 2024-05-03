@@ -13,6 +13,7 @@ import { BsFillPeopleFill } from "react-icons/bs";
 import { FaMap } from "react-icons/fa";
 import { RiLoopLeftFill } from "react-icons/ri";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import axios from "axios";
 
 const MainScreen = () => {
   const [isModal, setIsModal] = useState(false);
@@ -24,6 +25,7 @@ const MainScreen = () => {
   const [rustDetails, setRustDetails] = useState("");
   const [loadedImage, setLoadedImage] = useState(false);
 
+
   const [isPicked, setIsPicked] = useState(false);
   const { arrOfGroup } = useSelector((state) => state.group);
   const { serverList, isLoading } = useSelector((state) => state.server);
@@ -33,6 +35,20 @@ const MainScreen = () => {
   useEffect(() => {
     dispatch(fetchServer(name));
   }, [name]);
+
+  // const fetchUpdate = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://api.github.com/repos/zoneeoX/rustoffnotifier/commits?per_page=1"
+  //     );
+  //     setRepoUpdate(response.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   } 
+  // };
+  // useEffect(() => {
+  //   fetchUpdate()
+  // }, []);
 
   // useEffect(() => {
   //   fetchPlayersAmountOfTimeSomething();
@@ -60,6 +76,19 @@ const MainScreen = () => {
     setServerId(selectedServerId);
     changeIsPicked();
   }
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          new Notification("Thanks for using my website!", {
+            body: "Notifications will be displayed like these if players goes to 0 in a group!",
+            icon: "/icon.jpg",
+          });
+        }
+      });
+    }
+  }, []);
 
   function formatTimeAgo(timestamp) {
     const date = new Date(timestamp);
