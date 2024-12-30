@@ -1,4 +1,3 @@
-Rust offline detection
+*Rust Offline Notification System*
 
-Create groups containing all the players you want to detect, groups can be exported into json for later use.
-
+The rust (game) utility to monitor player online status. Create and manage groups, track individual players, and get notified when they go offline. Supports exporting groups to JSON.
